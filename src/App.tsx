@@ -1,13 +1,15 @@
 import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import GlobalStyle from './styles/global';
 import { ThemeProvider } from 'styled-components';
-
-import { EditEmployee } from './Pages/EditEmployee';
-
 import { main } from './styles/themes/main';
 import ISubsidiary from './interfaces/Subsidiary';
 import IEmployee from './interfaces/Employee';
+
+import { Routes } from './routes';
+
+import { AuthProvider } from './hooks/auth';
 
 const obj = {
   employeeNumber: 8,
@@ -23,10 +25,14 @@ const emp = {
 
 const App: React.FC = () => {
   return (
+    <Router>
     <ThemeProvider theme={main}>
     <GlobalStyle />
-    <EditEmployee employee={emp} subsidiary={obj} />
+    <AuthProvider>
+      <Routes />
+    </AuthProvider>
     </ThemeProvider>
+    </Router>
   );
 }
 

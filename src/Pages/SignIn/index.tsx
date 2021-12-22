@@ -5,13 +5,15 @@ import { AiOutlineUser, AiOutlineLock } from 'react-icons/ai';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 
+import { FormHandles } from '@unform/core';
+import { getErrors } from '../../utils/getErrors';
+import { useAuth } from '../../hooks/auth';
+
 import {
     Container,
     Title,
     Content
 } from './styles';
-import { FormHandles } from '@unform/core';
-import { getErrors } from '../../utils/getErrors';
 
 interface ISignIn {
     username: string;
@@ -21,6 +23,8 @@ interface ISignIn {
 const SignIn: React.FC = () => {
 
     const formRef = useRef<FormHandles>(null);
+
+    const { signIn } = useAuth();
 
     const handleSubmit = useCallback(async (data: ISignIn) => {
         try {
@@ -34,8 +38,15 @@ const SignIn: React.FC = () => {
                 abortEarly: false
             });
 
-            //Logar AQUI
-
+            try{
+                await signIn({
+                    username: data.username,
+                    password: data.password
+                });
+            }catch(error: any){
+                alert(error.message);
+            }
+ 
         }catch(error){
             const validationErrors = error as Yup.ValidationError;
             const errors = getErrors(validationErrors);
