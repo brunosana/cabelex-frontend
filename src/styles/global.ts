@@ -10,7 +10,7 @@ export default createGlobalStyle`
         outline: 0;
     }
 
-    body, input, button {
+    body, input, button, select {
         font-family: ${main.fonts.text};
         font-weight: 300;
         background-color: ${main.colors.background};
