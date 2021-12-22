@@ -3,7 +3,7 @@ import React from 'react';
 import GlobalStyle from './styles/global';
 import { ThemeProvider } from 'styled-components';
 
-import { EditSubsidiary } from './Pages/EditSubsidiary';
+import { Employees } from './Pages/Employees';
 
 import { main } from './styles/themes/main';
 import ISubsidiary from './interfaces/Subsidiary';
@@ -18,7 +18,7 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={main}>
     <GlobalStyle />
-    <EditSubsidiary subsidiary={obj} />
+    <Employees/>
     </ThemeProvider>
   );
 }

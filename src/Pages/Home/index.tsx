@@ -22,7 +22,7 @@ const Home: React.FC = () => {
             <Header />
             <Content>
                 <Button>Nova Filial</Button>
-                <SearchBar name='searchSubsidiary' placeholder='Nome da Filial'/>
+                <SearchBar name='searchSubsidiary' placeholder='Nome da Filial...'/>
             </Content>
             <SubsidiaryArea>
                 <TableHeader>
