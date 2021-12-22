@@ -73,7 +73,7 @@ export const Menu = styled.div<IMenu>`
     padding: 0;
     align-items: center;
     justify-content: center;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.9);
     z-index: 1;
     animation-name: inMenu;
     animation-duration: 0.1s;

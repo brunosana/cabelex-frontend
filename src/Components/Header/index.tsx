@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { useAuth } from '../../hooks/auth';
 
 import {
     Container,
@@ -16,6 +17,7 @@ import {
 const Header: React.FC = () => {
 
     const [showMenu, setShowMenu] = useState(false);
+    const { signOut, user } = useAuth();
 
     const handleOpenMenu = useCallback(() => {
         setShowMenu(true);
@@ -25,22 +27,27 @@ const Header: React.FC = () => {
         setShowMenu(false);
     }, []);
 
+    const handleSignOut = useCallback(async () => {
+        await signOut();
+    }, [signOut]);
+
     return(
         <>
         <Menu showMenu={showMenu} >
             <MenuArea>
-                <MenuItem>Menu 1</MenuItem>
-                <MenuItem>Menu 2</MenuItem>
-                <MenuItem>Menu 3</MenuItem>
+                <MenuItem>Filiais</MenuItem>
+                <MenuItem>Cadastrar Filial</MenuItem>
+                <MenuItem>Funcionários</MenuItem>
+                <MenuItem>Cadastrar Funcionário</MenuItem>
                 <MenuItem onClick={handleCloseMenu} >Sair do Menu</MenuItem>
-                <MenuItem>Sair da Aplicação</MenuItem>
+                <MenuItem onClick={handleSignOut}>Sair da Aplicação</MenuItem>
             </MenuArea>
         </Menu>
         <Container>
             <HeaderArea>
                 <Logo>Cabelex</Logo>
                 <UserArea>
-                    <UserInfo>Bem Vindo(a), {`<usuário>`}</UserInfo>
+                    <UserInfo>Bem Vindo(a), {user.name}</UserInfo>
                     <MenuButton onClick={handleOpenMenu} >Menu</MenuButton>
                 </UserArea>
             </HeaderArea>
