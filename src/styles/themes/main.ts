@@ -11,6 +11,7 @@ const main = {
         low: 8,
         medium: 13,
         high: 25,
+        ultra: 40
     },
     fonts: {
         cursive: 'Caveat',
