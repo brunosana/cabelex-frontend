@@ -1,8 +1,13 @@
 import React, { InputHTMLAttributes, useCallback, useEffect, useRef, useState } from 'react';
 import { IconBaseProps } from 'react-icons';
+import { FiAlertCircle  } from 'react-icons/fi';
 import { useField } from '@unform/core';
 
-import { Container } from './styles';
+import {
+    Container,
+    Error
+} from './styles';
+import { main } from '../../styles/themes/main';
 
 interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
     name: string;
@@ -50,6 +55,13 @@ const Input: React.FC<IInputProps> = ({ name, icon: Icon, ...rest }) => {
                 ref={inputRef}
                 {...rest}
             />
+            {
+                error &&
+                <Error title={error}>
+                    <FiAlertCircle color={main.colors.error} size={26}/>
+                </Error>
+
+            }
         </Container>
     );
 }

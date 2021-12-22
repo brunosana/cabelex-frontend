@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components';
 
+import { Tooltip } from '../Tooltip';
+
 interface IContainerProps {
     isErrored: boolean;
     isFocused: boolean;
@@ -8,7 +10,7 @@ interface IContainerProps {
 
 export const Container = styled.div<IContainerProps>`
     background: none;
-    border-radius: ${({ theme }) => theme.roundness.medium}px;
+    border-radius: ${({ theme }) => theme.roundness.high}px;
     border: 3px solid ${({ theme }) => theme.colors.shape};
     color: ${({ theme }) => theme.colors.shape_light};
     padding: 12px;
@@ -37,5 +39,20 @@ export const Container = styled.div<IContainerProps>`
     }
     & + div {
         margin-top: 35px;
+    }
+`;
+
+export const Error = styled(Tooltip)`
+    height: 25px;
+    margin-left: 16px;
+    svg {
+        margin: 0;
+    }
+    span {
+        background-color: ${({theme}) => theme.colors.error};
+        color: ${({theme}) => theme.colors.shape};
+        &:before {
+            border-color: ${({theme}) => theme.colors.error} transparent;
+        }
     }
 `;

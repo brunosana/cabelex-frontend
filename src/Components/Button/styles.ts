@@ -6,8 +6,8 @@ export const Container = styled.button`
     border: 0;
     border-radius: ${({ theme }) => theme.roundness.ultra}px;
     width: 100%;
-    height: 70px;
-    margin-top: 40px;
+    height: 65px;
+    margin-top: 50px;
     font-size: 28px;
     font-weight: bold;
     transition: 0.1s;
