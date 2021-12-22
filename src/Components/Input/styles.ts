@@ -34,7 +34,7 @@ export const Container = styled.div<IContainerProps>`
     }
     svg{
         margin-right: 16px;
-        color: ${({ theme }) => theme.colors.shape_light};
+        color: ${({ theme }) => theme.colors.shape};
         ${(props) => props.isFilled && css` color: ${({ theme }) => theme.colors.primary};`}
     }
     & + div {

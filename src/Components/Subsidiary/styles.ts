@@ -9,6 +9,10 @@ export const Container = styled.div`
     & + & {
         margin-top: 10px;
     }
+
+    &:hover {
+        opacity: 90%;
+    }
 `;
 
 export const Content = styled.div`
