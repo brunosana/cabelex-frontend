@@ -4,6 +4,7 @@ const main = {
         shape: '#FFF',
         half_shape: '#F4EDE8',
         shape_light: 'rgba(255,255,255,0.6)',
+        shape_overlight: 'rgba(255,255,255,0.14)',
         background: '#321C3D',
         error: '#C53030'
     },
