@@ -7,7 +7,7 @@ export const Container = styled.div`
         background: ${({ theme }) => theme.colors.shape};
         padding: 8px;
         border-radius: 4px;
-        font-size: 14px;
+        font-size: 20px;
         font-weight:  500;
         opacity: 0;
         transition: opacity 0.4s;
