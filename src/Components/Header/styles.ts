@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled, { css } from "styled-components";
 
 interface IMenu {
@@ -91,7 +92,8 @@ export const MenuArea = styled.div`
     justify-content: center;
 `;
 
-export const MenuItem = styled.a`
+export const MenuItem = styled(Link)`
+    text-decoration: none;
     color: ${({ theme }) => theme.colors.primary};
     font-size: 35px;
     transition: 0.1s;
@@ -103,6 +105,23 @@ export const MenuItem = styled.a`
     & + & {
         margin-top: 35px;
     }
+
+    &:hover {
+        color: ${({ theme }) => theme.colors.shape};
+        cursor: pointer;
+    }
+`;
+export const MenuItemA = styled.a`
+    color: ${({ theme }) => theme.colors.primary};
+    font-size: 35px;
+    transition: 0.1s;
+
+    margin-top: 35px;
+
+    @media screen and (max-width: 700px){
+        font-size: 28px;
+    }
+
 
     &:hover {
         color: ${({ theme }) => theme.colors.shape};

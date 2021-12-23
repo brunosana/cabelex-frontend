@@ -32,8 +32,13 @@ const AuthProvider: React.FC = ({ children }) => {
     const signIn = useCallback(async ({ username , password }: ICredentials) => {
         if(username && password){
             if(username === 'admin' && password === 'admin'){
-                setUser({ name: 'Nome', password: '123' });
-                localStorage.setItem(storageUserName, JSON.stringify(user));
+                const loggedUser = {
+                    name: username,
+                    password
+                } as IUser;
+
+                setUser(loggedUser);
+                localStorage.setItem(storageUserName, JSON.stringify(loggedUser));
                 setIsLogged(true);
             }else{
                 throw new Error('Credenciais incorretas');

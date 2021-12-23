@@ -11,7 +11,8 @@ import {
     MenuArea,
     UserInfo,
     Menu,
-    MenuItem
+    MenuItem,
+    MenuItemA
 } from './styles';
 
 const Header: React.FC = () => {
@@ -35,12 +36,12 @@ const Header: React.FC = () => {
         <>
         <Menu showMenu={showMenu} >
             <MenuArea>
-                <MenuItem>Filiais</MenuItem>
-                <MenuItem>Cadastrar Filial</MenuItem>
-                <MenuItem>Funcionários</MenuItem>
-                <MenuItem>Cadastrar Funcionário</MenuItem>
-                <MenuItem onClick={handleCloseMenu} >Sair do Menu</MenuItem>
-                <MenuItem onClick={handleSignOut}>Sair da Aplicação</MenuItem>
+                <MenuItem to='/home' >Filiais</MenuItem>
+                <MenuItem to='/subsidiary'>Cadastrar Filial</MenuItem>
+                <MenuItem to='/employees'>Funcionários</MenuItem>
+                <MenuItem to='/employee'>Cadastrar Funcionário</MenuItem>
+                <MenuItemA onClick={handleCloseMenu} >Sair do Menu</MenuItemA>
+                <MenuItemA onClick={handleSignOut}>Sair da Aplicação</MenuItemA>
             </MenuArea>
         </Menu>
         <Container>

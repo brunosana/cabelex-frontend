@@ -16,38 +16,29 @@ import {
 } from './styles'
 import { Header } from '../../Components/Header';
 import ISubsidiary from '../../interfaces/Subsidiary';
+import { useMock } from '../../hooks/mock';
+import { useHistory } from 'react-router-dom';
 
 interface ICreateEmployee {
     name: string;
     filial: string;
 }
 
-const subsidiariesFake = [
-    {
-        id: '1',
-        employeeNumber: 7,
-        name: 'Tobias Barreto' 
-    },
-    {
-        id: '2',
-        employeeNumber: 12,
-        name: 'Aracaju' 
-    },
-    {
-        id: '3',
-        employeeNumber: 8,
-        name: 'São Paulo' 
-    },
-] as Array<ISubsidiary>
-
 const CreateEmployee: React.FC = () => {
     
     const formRef = useRef<FormHandles>(null);
-    const [subsidiaries, setSubsidiaries] = useState<Array<ISubsidiary>>(subsidiariesFake);
+    const [subsidiaries, setSubsidiaries] = useState<Array<ISubsidiary>>([]);
+    const history = useHistory();
 
-    useEffect(useCallback(() => {
-        setSubsidiaries(subsidiaries);
-    }, [subsidiaries]), []);
+    const { getSubsidiaries, createEmployee } = useMock();
+
+    useEffect(() => {
+        async function loadSubsidiaries(){
+            const response = await getSubsidiaries();
+            setSubsidiaries(response);
+        }
+        loadSubsidiaries();
+    }, [getSubsidiaries]);
 
     const handleSubmit = useCallback(async (data: ICreateEmployee )=> {
         try {
@@ -61,14 +52,23 @@ const CreateEmployee: React.FC = () => {
                 abortEarly: false
             });
 
-            //Adicionar Funcionário Aqui
+            try{
+                await createEmployee({
+                    name: data.name,
+                    subsidiary: data.filial
+                });
+                history.push('/employees');
+
+            }catch(error: any) {
+                alert(error.message);
+            }
 
         }catch(error){
             const validationErrors = error as Yup.ValidationError;
             const errors = getErrors(validationErrors);
             formRef.current?.setErrors(errors);
         }
-    }, []);
+    }, [createEmployee]);
 
     return (
         <>
@@ -81,7 +81,7 @@ const CreateEmployee: React.FC = () => {
                         <Select icon={BiBuildingHouse} name='filial'>
                             {
                                 subsidiaries.map(sub =>
-                                    <option value={sub.id}>{sub.name}</option>
+                                    <option key={sub.id} value={sub.id}>{sub.name}</option>
                                 )
                                 
                             }

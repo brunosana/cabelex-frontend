@@ -17,43 +17,39 @@ import {
 import { Header } from '../../Components/Header';
 import ISubsidiary from '../../interfaces/Subsidiary';
 import IEmployee from '../../interfaces/Employee';
-
-interface IEditEmployee {
-    employee: IEmployee;
-    subsidiary: ISubsidiary;
-}
+import { useMock } from '../../hooks/mock';
+import { useParams } from 'react-router-dom';
+import { IParamsType } from '../../interfaces/ParamTypes';
 
 interface ICreateEmployee {
     name: string;
     filial: string;
 }
 
-const subsidiariesFake = [
-    {
-        id: '1',
-        employeeNumber: 7,
-        name: 'Tobias Barreto' 
-    },
-    {
-        id: '2',
-        employeeNumber: 12,
-        name: 'Aracaju' 
-    },
-    {
-        id: '3',
-        employeeNumber: 8,
-        name: 'São Paulo' 
-    },
-] as Array<ISubsidiary>;
 
-const EditEmployee: React.FC<IEditEmployee> = ({ employee, subsidiary }) => {
+const EditEmployee: React.FC = () => {
     
     const formRef = useRef<FormHandles>(null);
-    const [subsidiaries, setSubsidiaries] = useState<Array<ISubsidiary>>(subsidiariesFake);
+    const [subsidiaries, setSubsidiaries] = useState<Array<ISubsidiary>>([]);
+    const [employee, setEmployee] = useState<IEmployee>();
+    const { getSubsidiaries, getEmployees } = useMock();
+    const { id } = useParams<IParamsType>();
 
-    useEffect(useCallback(() => {
-        setSubsidiaries(subsidiaries);
-    }, [subsidiaries]), []);
+    useEffect(()=> {
+        async function loadData(){
+            
+            const employeeResponse = await getEmployees();
+            const employeeIndex = employeeResponse.findIndex(emp => emp.id === id);
+            setEmployee(employeeResponse[employeeIndex]);
+            
+            let subsidiaryResponse = await getSubsidiaries();
+            const subIndex = subsidiaryResponse.findIndex(sub => sub.name === employeeResponse[employeeIndex].filial);
+            let tempSubsidiary = subsidiaryResponse[subIndex]; 
+            subsidiaryResponse.splice(subIndex, 1);
+            setSubsidiaries([tempSubsidiary, ...subsidiaryResponse]);
+        }
+        loadData();
+    }, [getSubsidiaries, getEmployees, id]);
 
     const handleSubmit = useCallback(async (data: ICreateEmployee )=> {
         try {
@@ -82,6 +78,8 @@ const EditEmployee: React.FC<IEditEmployee> = ({ employee, subsidiary }) => {
             <Title>Editar Funcionário</Title>
             <Container>
                 <Content>
+                    {
+                    employee &&
                     <Form ref={formRef} onSubmit={handleSubmit}>
                         <Input icon={BiUser} name='name' defaultValue={employee.name} />
                         <Select icon={BiBuildingHouse} name='filial'>
@@ -94,6 +92,7 @@ const EditEmployee: React.FC<IEditEmployee> = ({ employee, subsidiary }) => {
                         </Select>
                         <Button type='submit'>Salvar</Button>
                     </Form>
+                    }
                 </Content>
             </Container>
         </>
