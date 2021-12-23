@@ -65,7 +65,6 @@ const MockProvider: React.FC = ({ children }) => {
     
     const createEmployee = useCallback(async ({ name, subsidiary }: ICreateEmployee) => {
         
-        console.log(employees);
         const employeeIndex = employees.findIndex(emp => emp.name === name);
         if(employeeIndex >= 0){
             throw new Error('Funcionário Existente');
@@ -106,11 +105,12 @@ const MockProvider: React.FC = ({ children }) => {
     const getEmployees = useCallback(async () => {
         let employeesReturn = employees;
 
-        employeesReturn.map(emp => {
-            const subsidiary = subsidiaries.find(sub => sub.id === emp.filial);
+        for(let i = 0; i < employeesReturn.length; i++) {
+            const subsidiary = subsidiaries.find(sub => sub.id === employeesReturn[i].filial);
             if(subsidiary)
-                emp.filial = subsidiary.name;
-        });      
+            employeesReturn[i].filial = subsidiary.name;
+
+        }  
         
         return employeesReturn;
     }, [employees, subsidiaries]);

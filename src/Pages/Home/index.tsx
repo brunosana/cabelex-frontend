@@ -38,7 +38,11 @@ const Home: React.FC = () => {
                 <SearchBar name='searchSubsidiary' placeholder='Nome da Filial...'/>
             </Content>
             <SubsidiaryArea>
-                <Table />
+                <Table
+                    column1='ID'
+                    column2='Nome da Filial'
+                    column3='Funcionários'
+                 />
                 {
                     subsidiaries.map(sub =>
                         <Subsidiary
