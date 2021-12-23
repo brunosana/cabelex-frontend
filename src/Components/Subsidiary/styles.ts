@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import { Link } from 'react-router-dom';
+
 export const Container = styled.div`
     width: 100vw;
     height: 80px;
@@ -60,16 +62,15 @@ export const EmployeeNumber = styled.span`
 `;
 export const OptionsArea = styled.div``;
 
-export const OptionsButton = styled.a`
+export const OptionsButtonA = styled.a`
     transition: 0.1s;
+    color: ${({ theme }) => theme.colors.shape};
     svg {
         transition: 0.1s;   
         font-size: 30px;
     }
 
-    & + & {
-        margin-left: 20px;
-    }
+    margin-left: 20px;
     
     &:hover {
         color: ${({ theme }) => theme.colors.primary};
@@ -80,19 +81,14 @@ export const OptionsButton = styled.a`
     }
 
     @media screen and (max-width: 800px) {
+        margin-left: 10px;
         svg {
             font-size: 22px;
-        }
-
-        & + & {
-            margin-left: 10px;
         }
     }
 
     @media screen and (max-width: 500px) {
-        & + & {
             margin-left: 5px;
-        }
     }
 
     @media screen and (max-width: 300px) {
@@ -100,9 +96,6 @@ export const OptionsButton = styled.a`
             font-size: 17px;
         }
 
-        & + & {
             margin-left: 4px;
-        }
     }
-
 `;

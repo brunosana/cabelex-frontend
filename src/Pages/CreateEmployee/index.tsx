@@ -17,6 +17,7 @@ import {
 import { Header } from '../../Components/Header';
 import ISubsidiary from '../../interfaces/Subsidiary';
 import { useMock } from '../../hooks/mock';
+import { useHistory } from 'react-router-dom';
 
 interface ICreateEmployee {
     name: string;
@@ -27,6 +28,7 @@ const CreateEmployee: React.FC = () => {
     
     const formRef = useRef<FormHandles>(null);
     const [subsidiaries, setSubsidiaries] = useState<Array<ISubsidiary>>([]);
+    const history = useHistory();
 
     const { getSubsidiaries, createEmployee } = useMock();
 
@@ -54,7 +56,9 @@ const CreateEmployee: React.FC = () => {
                 await createEmployee({
                     name: data.name,
                     subsidiary: data.filial
-                })
+                });
+                history.push('/employees');
+
             }catch(error: any) {
                 alert(error.message);
             }

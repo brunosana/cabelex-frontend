@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Link } from 'react-router-dom';
 
@@ -22,19 +22,24 @@ const Home: React.FC = () => {
     const [subsidiaries, setSubsidiaries] = useState<Array<ISubsidiary>>([]);
     const { getSubsidiaries } = useMock();
 
+    const handleReload = useCallback(async () => {
+        const response = await getSubsidiaries();
+        setSubsidiaries(response);
+    },[getSubsidiaries]);
+
     useEffect(() => {
         async function loadSubsidiaries(){
             const response = await getSubsidiaries();
             setSubsidiaries(response);
         }
         loadSubsidiaries();
-    }, [getSubsidiaries]);
+    }, [getSubsidiaries, subsidiaries]);
 
     return (
         <Container>
             <Header />
             <Content>
-                <ButtonLink to='/filial' >Nova Filial</ButtonLink>
+                <ButtonLink to='/subsidiary' >Nova Filial</ButtonLink>
                 <SearchBar name='searchSubsidiary' placeholder='Nome da Filial...'/>
             </Content>
             <SubsidiaryArea>
@@ -44,10 +49,11 @@ const Home: React.FC = () => {
                     column3='Funcionários'
                  />
                 {
+                    subsidiaries &&
                     subsidiaries.map(sub =>
                         <Subsidiary
                             key={sub.id}
-                            id={sub.id.slice(0, 8)}
+                            id={sub.id}
                             name={sub.name}
                             employeeNumber={sub.employeeNumber}
                         />

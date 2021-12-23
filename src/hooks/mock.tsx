@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useState, useContext } from 'react';
+import React, { createContext, useCallback, useState, useContext, useEffect } from 'react';
 import { v4 as uuid } from 'uuid';
 
 import IEmployee from '../interfaces/Employee';
@@ -9,14 +9,19 @@ interface ICreateEmployee{
     subsidiary: string;
 }
 
+interface IChangeSubsidiary {
+    name: string;
+    id: string;
+}
 interface IMockContextData {
     getSubsidiaries(): Promise<Array<ISubsidiary>>
     createSubsidiary(name: string): Promise<ISubsidiary>;
-    editSubsidiary(subsidiary: ISubsidiary): Promise<ISubsidiary>;
+    editSubsidiary(subsidiary: IChangeSubsidiary): Promise<ISubsidiary>;
     getEmployees(): Promise<Array<IEmployee>>;
     createEmployee(data: ICreateEmployee): Promise<IEmployee>;
     editEmployee(data: IEmployee): Promise<IEmployee>;
     deleteEmployee(id: string): Promise<void>;
+    deleteSubsidiary(id: string): Promise<void>;
 }
 
 const MockContext = createContext({} as IMockContextData);
@@ -25,7 +30,7 @@ const storageSubsidiaries = '@cabelex::subsidiaries';
 const stogareEmployees = '@cabelex::employees';
 
 const MockProvider: React.FC = ({ children }) => {
-
+    
     const [subsidiaries, setSubsidiaries] = useState<Array<ISubsidiary>>(() => {
         const storagedSubsidiaries = localStorage.getItem(storageSubsidiaries);
         if(storagedSubsidiaries){
@@ -74,21 +79,28 @@ const MockProvider: React.FC = ({ children }) => {
         if(subsidiaryIndex < 0){
             throw new Error('Filial não cadastrada');
         }
-        
-        const employee = {
+
+        const filialId = subsidiaries[subsidiaryIndex].id;
+        console.log('ID', filialId);
+       
+        const employee: IEmployee = {
             id: uuid(),
             name,
-            filial: subsidiary,
-        } as IEmployee;
+            filial: filialId,
+        } 
         
-        let newSubsidiary = subsidiaries[subsidiaryIndex];
+        
+        const newSubsidiary = subsidiaries[subsidiaryIndex];
         newSubsidiary.employeeNumber += 1;
-
-        let employeesArray = [...employees, employee];
+        
+        const employeesArray = [...employees, employee];
+        console.log('Before', employeesArray);
         setEmployees(employeesArray);
+        console.log('After', employeesArray);
+
         localStorage.setItem(stogareEmployees, JSON.stringify(employeesArray));
 
-        let newSubsidiaries = subsidiaries;
+        const newSubsidiaries = subsidiaries;
         newSubsidiaries[subsidiaryIndex] = newSubsidiary;
         setSubsidiaries(newSubsidiaries);
 
@@ -115,7 +127,7 @@ const MockProvider: React.FC = ({ children }) => {
         return employeesReturn;
     }, [employees, subsidiaries]);
 
-    const editSubsidiary = useCallback(async ({ id, name }: ISubsidiary) => {
+    const editSubsidiary = useCallback(async ({ id, name }: IChangeSubsidiary) => {
         const subsidiaryIndex = subsidiaries.findIndex(sub => sub.id === id);
         if(subsidiaryIndex < 0) {
             throw new Error('Filial não encontrada');
@@ -166,13 +178,13 @@ const MockProvider: React.FC = ({ children }) => {
             throw new Error('Funcionário não encontrado');
         }
         const employee = employees[employeeIndex];
-        const subsidiaryIndex = subsidiaries.findIndex(sub => sub.id === employee.filial);
+        const subsidiaryIndex = subsidiaries.findIndex(sub => sub.name === employee.filial);
         let newSubsidiary = subsidiaries[subsidiaryIndex];
         newSubsidiary.employeeNumber -= 1;
 
 
         let employeesArray = employees;
-        delete employeesArray[employeeIndex];
+        employeesArray.splice(employeeIndex, 1);
 
         setEmployees(employeesArray);
         localStorage.setItem(stogareEmployees, JSON.stringify(employeesArray));
@@ -184,6 +196,24 @@ const MockProvider: React.FC = ({ children }) => {
 
     }, [employees, subsidiaries]);
 
+    const deleteSubsidiary = useCallback(async (id: string) => {
+        const subsidiaryIndex = subsidiaries.findIndex(sub => sub.id === id);
+        if(subsidiaryIndex < 0){
+            throw new Error('Filial não encontrada');
+        }
+
+        const haveSomeEmployeeOnThisSubsidiary = employees.findIndex(emp => emp.filial === id);
+        if(haveSomeEmployeeOnThisSubsidiary >=0){
+            throw new Error('Esta filial possui funcionários alocados nela');
+        }
+
+        let newSubsidiaries = subsidiaries;
+        newSubsidiaries.splice(subsidiaryIndex, 1);
+        setSubsidiaries(newSubsidiaries);
+        localStorage.setItem(storageSubsidiaries, JSON.stringify(newSubsidiaries));
+
+    },[subsidiaries, employees]);
+
     return(
         <MockContext.Provider
             value={{
@@ -193,7 +223,8 @@ const MockProvider: React.FC = ({ children }) => {
                 getEmployees,
                 editSubsidiary,
                 editEmployee,
-                deleteEmployee
+                deleteEmployee,
+                deleteSubsidiary
             }}
         >
             { children }

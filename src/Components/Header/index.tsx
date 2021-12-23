@@ -37,7 +37,7 @@ const Header: React.FC = () => {
         <Menu showMenu={showMenu} >
             <MenuArea>
                 <MenuItem to='/home' >Filiais</MenuItem>
-                <MenuItem to='/filial'>Cadastrar Filial</MenuItem>
+                <MenuItem to='/subsidiary'>Cadastrar Filial</MenuItem>
                 <MenuItem to='/employees'>Funcionários</MenuItem>
                 <MenuItem to='/employee'>Cadastrar Funcionário</MenuItem>
                 <MenuItemA onClick={handleCloseMenu} >Sair do Menu</MenuItemA>
