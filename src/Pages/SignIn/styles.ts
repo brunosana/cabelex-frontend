@@ -21,6 +21,13 @@ export const Content = styled.div`
             margin-right: 25%;
         }
     }
+    @media screen and (max-width: 1240px){
+        width: 50%;
+    }
+    @media screen and (max-width: 700px){
+        width: 80%;
+    }
+
 `;
 
 export const Title = styled.h2`
@@ -30,4 +37,9 @@ export const Title = styled.h2`
     width: 100%;
     text-align: center;
     margin-bottom: 50px;
+    
+    @media screen and (max-width: 1240px){
+        font-size: 90px;
+    }
+
 `;
