@@ -17,9 +17,9 @@ import {
 import { Header } from '../../Components/Header';
 import ISubsidiary from '../../interfaces/Subsidiary';
 import IEmployee from '../../interfaces/Employee';
-import { useMock } from '../../hooks/mock';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { IParamsType } from '../../interfaces/ParamTypes';
+import { useMock } from '../../hooks/mock';
 
 interface ICreateEmployee {
     name: string;
@@ -32,8 +32,9 @@ const EditEmployee: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
     const [subsidiaries, setSubsidiaries] = useState<Array<ISubsidiary>>([]);
     const [employee, setEmployee] = useState<IEmployee>();
-    const { getSubsidiaries, getEmployees } = useMock();
+    const { getSubsidiaries, getEmployees, editEmployee } = useMock();
     const { id } = useParams<IParamsType>();
+    const history = useHistory();
 
     useEffect(()=> {
         async function loadData(){
@@ -42,11 +43,8 @@ const EditEmployee: React.FC = () => {
             const employeeIndex = employeeResponse.findIndex(emp => emp.id === id);
             setEmployee(employeeResponse[employeeIndex]);
             
-            let subsidiaryResponse = await getSubsidiaries();
-            const subIndex = subsidiaryResponse.findIndex(sub => sub.name === employeeResponse[employeeIndex].filial);
-            let tempSubsidiary = subsidiaryResponse[subIndex]; 
-            subsidiaryResponse.splice(subIndex, 1);
-            setSubsidiaries([tempSubsidiary, ...subsidiaryResponse]);
+            const subsidiaryResponse = await getSubsidiaries();
+            setSubsidiaries(subsidiaryResponse);
         }
         loadData();
     }, [getSubsidiaries, getEmployees, id]);
@@ -63,14 +61,24 @@ const EditEmployee: React.FC = () => {
                 abortEarly: false
             });
 
-            //Editar Funcionário Aqui
+            try{
+                await editEmployee({
+                    filial: data.filial,
+                    name: data.name,
+                    id
+                });
+                history.push('/employees');
+            }catch(error: any){
+                alert(error.message);
+            }
+
 
         }catch(error){
             const validationErrors = error as Yup.ValidationError;
             const errors = getErrors(validationErrors);
             formRef.current?.setErrors(errors);
         }
-    }, []);
+    }, [editEmployee, history, id]);
 
     return (
         <>
@@ -85,7 +93,7 @@ const EditEmployee: React.FC = () => {
                         <Select icon={BiBuildingHouse} name='filial'>
                             {
                                 subsidiaries.map(sub =>
-                                    <option value={sub.id}>{sub.name}</option>
+                                    <option key={sub.id} value={sub.id}>{sub.name}</option>
                                 )
                                 
                             }
