@@ -1,7 +1,9 @@
 import React from 'react';
 
+import { Link } from 'react-router-dom';
+
 import { Header } from '../../Components/Header';
-import { Button } from '../../Components/Button';
+import { ButtonLink } from '../../Components/ButtonLink';
 import { SearchBar } from '../../Components/SearchBar';
 import { Subsidiary } from '../../Components/Subsidiary';
 
@@ -21,7 +23,7 @@ const Home: React.FC = () => {
         <Container>
             <Header />
             <Content>
-                <Button>Nova Filial</Button>
+                <ButtonLink to='/filial' >Nova Filial</ButtonLink>
                 <SearchBar name='searchSubsidiary' placeholder='Nome da Filial...'/>
             </Content>
             <SubsidiaryArea>

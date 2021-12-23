@@ -43,11 +43,10 @@ const MockProvider: React.FC = ({ children }) => {
 
 
     const createSubsidiary = useCallback( async (name: string) => {
-        subsidiaries.map(sub => {
-            if(sub.name === name){
-                throw new Error('Filial existente');
-            }
-        });
+        for(let i = 0; i < subsidiaries.length; i++){
+            if(subsidiaries[i].name === name)
+                    throw new Error('Filial existente');
+        }
 
         let subsidiary = {
             id: uuid(),
@@ -55,8 +54,9 @@ const MockProvider: React.FC = ({ children }) => {
             employeeNumber: 0
         } as ISubsidiary;
 
-        setSubsidiaries([...subsidiaries, subsidiary]);
-        localStorage.setItem(storageSubsidiaries, JSON.stringify(subsidiaries));
+        let subsidariesArray = [...subsidiaries, subsidiary];
+        setSubsidiaries(subsidariesArray);
+        localStorage.setItem(storageSubsidiaries, JSON.stringify(subsidariesArray));
         
         return subsidiary;
         
@@ -80,8 +80,9 @@ const MockProvider: React.FC = ({ children }) => {
             filial: subsidiary,
         } as IEmployee;
         
-        localStorage.setItem(stogareEmployees, JSON.stringify(employees));
-        setEmployees([...employees, employee]);
+        let employeesArray = [...employees, employee];
+        setEmployees(employeesArray);
+        localStorage.setItem(stogareEmployees, JSON.stringify(employeesArray));
         return employee;
 
     }, [subsidiaries, employees]);
