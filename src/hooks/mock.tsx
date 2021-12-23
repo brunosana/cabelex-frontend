@@ -81,7 +81,6 @@ const MockProvider: React.FC = ({ children }) => {
         }
 
         const filialId = subsidiaries[subsidiaryIndex].id;
-        console.log('ID', filialId);
        
         const employee: IEmployee = {
             id: uuid(),
@@ -94,9 +93,7 @@ const MockProvider: React.FC = ({ children }) => {
         newSubsidiary.employeeNumber += 1;
         
         const employeesArray = [...employees, employee];
-        console.log('Before', employeesArray);
         setEmployees(employeesArray);
-        console.log('After', employeesArray);
 
         localStorage.setItem(stogareEmployees, JSON.stringify(employeesArray));
 
@@ -159,15 +156,26 @@ const MockProvider: React.FC = ({ children }) => {
             throw new Error('Filial não cadastrada');
         }
 
+        const oldSubIndex = subsidiaries.findIndex(sub => sub.name === employees[employeeIndex].filial);
+
         const employee = {
             id,
             name,
             filial: subsidiaries[subsidiaryIndex].id,
         } as IEmployee;
 
-        let employeesArray = [...employees, employee];
+
+        let employeesArray = employees;
+        employeesArray[employeeIndex] = employee;
         setEmployees(employeesArray);
         localStorage.setItem(stogareEmployees, JSON.stringify(employeesArray));
+
+        let newSubsidiaries = subsidiaries;
+        newSubsidiaries[oldSubIndex].employeeNumber -= 1;
+        newSubsidiaries[subsidiaryIndex].employeeNumber += 1;
+        setSubsidiaries(newSubsidiaries);
+        localStorage.setItem(storageSubsidiaries, JSON.stringify(newSubsidiaries));
+
         return employee;
 
     }, [employees, subsidiaries]);
