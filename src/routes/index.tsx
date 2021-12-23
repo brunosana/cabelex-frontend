@@ -6,6 +6,7 @@ import { Route } from './Route';
 import { SignIn } from '../Pages/SignIn';
 import { Home } from '../Pages/Home';
 import { CreateSubsidiary } from '../Pages/CreateSubsidiary';
+import { CreateEmployee } from '../Pages/CreateEmployee';
 
 const Routes: React.FC = () => {
     return(
@@ -14,6 +15,7 @@ const Routes: React.FC = () => {
 
             <Route path="/home" component={Home} isPrivate />
             <Route path="/filial" component={CreateSubsidiary} isPrivate />
+            <Route path="/employee" component={CreateEmployee} isPrivate />
         </Switch>
     );
 };

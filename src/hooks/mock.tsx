@@ -16,6 +16,7 @@ interface IMockContextData {
     getEmployees(): Promise<Array<IEmployee>>;
     createEmployee(data: ICreateEmployee): Promise<IEmployee>;
     editEmployee(data: IEmployee): Promise<IEmployee>;
+    deleteEmployee(id: string): Promise<void>;
 }
 
 const MockContext = createContext({} as IMockContextData);
@@ -64,8 +65,9 @@ const MockProvider: React.FC = ({ children }) => {
     
     const createEmployee = useCallback(async ({ name, subsidiary }: ICreateEmployee) => {
         
+        console.log(employees);
         const employeeIndex = employees.findIndex(emp => emp.name === name);
-        if(employeeIndex < 0){
+        if(employeeIndex >= 0){
             throw new Error('Funcionário Existente');
         }
         
@@ -80,9 +82,19 @@ const MockProvider: React.FC = ({ children }) => {
             filial: subsidiary,
         } as IEmployee;
         
+        let newSubsidiary = subsidiaries[subsidiaryIndex];
+        newSubsidiary.employeeNumber += 1;
+
         let employeesArray = [...employees, employee];
         setEmployees(employeesArray);
         localStorage.setItem(stogareEmployees, JSON.stringify(employeesArray));
+
+        let newSubsidiaries = subsidiaries;
+        newSubsidiaries[subsidiaryIndex] = newSubsidiary;
+        setSubsidiaries(newSubsidiaries);
+
+        localStorage.setItem(storageSubsidiaries, JSON.stringify(newSubsidiaries));
+
         return employee;
 
     }, [subsidiaries, employees]);
@@ -119,7 +131,7 @@ const MockProvider: React.FC = ({ children }) => {
         newSubsidiaries[subsidiaryIndex] = newSubsidiary;
         setSubsidiaries(newSubsidiaries);
 
-        localStorage.setItem(storageSubsidiaries, JSON.stringify(subsidiaries));
+        localStorage.setItem(storageSubsidiaries, JSON.stringify(newSubsidiaries));
         
         return newSubsidiary;
     }, [subsidiaries]);
@@ -141,9 +153,34 @@ const MockProvider: React.FC = ({ children }) => {
             filial: subsidiaries[subsidiaryIndex].id,
         } as IEmployee;
 
-        localStorage.setItem(stogareEmployees, JSON.stringify(employees));
-        setEmployees([...employees, employee]);
+        let employeesArray = [...employees, employee];
+        setEmployees(employeesArray);
+        localStorage.setItem(stogareEmployees, JSON.stringify(employeesArray));
         return employee;
+
+    }, [employees, subsidiaries]);
+
+    const deleteEmployee = useCallback( async (id: string)=> {
+        const employeeIndex = employees.findIndex(emp => emp.id === id);
+        if(employeeIndex < 0){
+            throw new Error('Funcionário não encontrado');
+        }
+        const employee = employees[employeeIndex];
+        const subsidiaryIndex = subsidiaries.findIndex(sub => sub.id === employee.filial);
+        let newSubsidiary = subsidiaries[subsidiaryIndex];
+        newSubsidiary.employeeNumber -= 1;
+
+
+        let employeesArray = employees;
+        delete employeesArray[employeeIndex];
+
+        setEmployees(employeesArray);
+        localStorage.setItem(stogareEmployees, JSON.stringify(employeesArray));
+
+        let newSubsidiaries = subsidiaries;
+        newSubsidiaries[subsidiaryIndex] = newSubsidiary;
+        setSubsidiaries(newSubsidiaries);
+        localStorage.setItem(storageSubsidiaries, JSON.stringify(newSubsidiaries));
 
     }, [employees, subsidiaries]);
 
@@ -155,7 +192,8 @@ const MockProvider: React.FC = ({ children }) => {
                 getSubsidiaries,
                 getEmployees,
                 editSubsidiary,
-                editEmployee
+                editEmployee,
+                deleteEmployee
             }}
         >
             { children }

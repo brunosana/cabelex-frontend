@@ -46,7 +46,7 @@ const AuthProvider: React.FC = ({ children }) => {
         }else {
             throw new Error('Faltando usuário ou passowrd');
         }
-    }, [user]);
+    }, []);
     const signOut = useCallback(async () => {
         setUser({} as IUser);
         setIsLogged(false);
