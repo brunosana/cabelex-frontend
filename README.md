@@ -4,6 +4,10 @@
 
 [Click Here](https://cabelex.herokuapp.com/) to see the Deploy.
 
+The main user is 
+login: admin
+password: admin
+
 ## Concept:
 
 ### Figma
